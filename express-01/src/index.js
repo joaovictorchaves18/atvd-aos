@@ -34,6 +34,7 @@ app.get("/", (req, res) => {
 app.use("/session", routes.session);
 app.use("/users", routes.user);
 app.use("/messages", routes.message);
+app.use("/tarefas", routes.tarefa);
 
 // rota não encontrada (404)
 app.use(notFoundMiddleware);

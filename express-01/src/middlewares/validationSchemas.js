@@ -92,3 +92,55 @@ export const messageIdParamSchema = z.object({
     messageId: z.uuid("Formato de UUID inválido"),
   }),
 });
+
+/**
+ * Schema de criação de tarefa.
+ * Valida obrigatoriedade de descricao e valor opcional booleano de concluida (padrão false).
+ */
+export const createTarefaSchema = z.object({
+  body: z.object({
+    descricao: z
+      .string("Campo obrigatório")
+      .trim()
+      .min(1, "Campo obrigatório"),
+    concluida: z
+      .boolean("O campo concluida deve ser um booleano")
+      .default(false),
+  }),
+});
+
+/**
+ * Schema de atualização de tarefa.
+ * Permite atualização parcial de descricao e/ou concluida,
+ * exigindo que ao menos um campo seja enviado.
+ */
+export const updateTarefaSchema = z.object({
+  body: z
+    .object({
+      descricao: z
+        .string("O campo descricao deve ser uma string")
+        .trim()
+        .min(1, "Campo não pode ser vazio")
+        .optional(),
+      concluida: z
+        .boolean("O campo concluida deve ser um booleano")
+        .optional(),
+    })
+    .refine(
+      (data) => data.descricao !== undefined || data.concluida !== undefined,
+      {
+        message:
+          "Ao menos um campo (descricao ou concluida) deve ser fornecido para atualização.",
+      }
+    ),
+});
+
+/**
+ * Schema de validação do parâmetro :objectId.
+ * Exige formato UUID válido.
+ */
+export const tarefaIdParamSchema = z.object({
+  params: z.object({
+    objectId: z.uuid("Formato de UUID inválido"),
+  }),
+});
